@@ -30,7 +30,18 @@ h1 {
 .add-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.message {
+  min-height: 20px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #52d17f;
+}
+
+.message.error {
+  color: #f6465d;
 }
 
 #coinInput {

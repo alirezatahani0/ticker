@@ -9,9 +9,10 @@
     <h1>Track coins</h1>
     <p class="hint">Coins appear in a bar at the bottom of every tab.</p>
     <div class="add-row">
-      <input type="text" id="coinInput" placeholder="e.g. BTC, ETH, SOL" autocomplete="off">
-      <button id="addBtn">Add</button>
+      <input type="text" id="coinInput" placeholder="e.g. BTC, ETH, SOL" autocomplete="off" maxlength="10" aria-label="Coin symbol">
+      <button type="button" id="addBtn">Add</button>
     </div>
+    <p id="message" class="message" aria-live="polite"></p>
     <ul id="coinList"></ul>
   </div>
   <script src="popup.js"></script>

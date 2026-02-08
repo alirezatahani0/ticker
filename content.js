@@ -2,6 +2,18 @@ const COINS_KEY = 'binance_tracker_coins';
 const PRICES_KEY = 'binance_tracker_prices';
 const TICKER24_KEY = 'binance_tracker_ticker24';
 const SPARKLINE_KEY = 'binance_tracker_sparkline';
+const VALID_SYMBOL = /^[A-Z0-9]{2,10}$/;
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  const s = String(str);
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function createBar() {
 	if (document.getElementById('binance-tracker-bar')) return;
@@ -13,9 +25,10 @@ function createBar() {
 }
 
 function formatPrice(price) {
-	if (price == null) return '—';
-	const n = Number(price);
-	if (n >= 1000)
+  if (price == null) return '—';
+  const n = Number(price);
+  if (!Number.isFinite(n)) return '—';
+  if (n >= 1000)
 		return n.toLocaleString('en-US', {
 			minimumFractionDigits: 2,
 			maximumFractionDigits: 2,
@@ -32,19 +45,21 @@ function formatPrice(price) {
 }
 
 function formatChange(pct) {
-	if (pct == null || pct === '') return '';
-	const n = Number(pct);
-	const sign = n >= 0 ? '+' : '';
-	return `${sign}${n.toFixed(2)}%`;
+  if (pct == null || pct === '') return '';
+  const n = Number(pct);
+  if (!Number.isFinite(n)) return '';
+  const sign = n >= 0 ? '+' : '';
+  return `${sign}${n.toFixed(2)}%`;
 }
 
 function formatVolume(vol) {
-	if (vol == null) return '—';
-	const n = Number(vol);
-	if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
-	if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-	if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
-	return n.toFixed(0);
+  if (vol == null) return '—';
+  const n = Number(vol);
+  if (!Number.isFinite(n) || n < 0) return '—';
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
+  return n.toFixed(0);
 }
 
 function buildSparklineSvg(values, symbol) {
@@ -67,7 +82,8 @@ function buildSparklineSvg(values, symbol) {
 	let pathD = `M ${pts[0].x} ${pts[0].y}`;
 	for (let i = 1; i < pts.length; i++) pathD += ` L ${pts[i].x} ${pts[i].y}`;
 	const areaD = `M ${pts[0].x} ${height - padY} L ${pts[0].x} ${pts[0].y} ${pathD.replace('M ', 'L ')} L ${pts[pts.length - 1].x} ${height - padY} Z`;
-	const gradId = `bt-spark-grad-${symbol}`;
+	const safeId = String(symbol).replace(/[^A-Za-z0-9_-]/g, '') || 'spark';
+	const gradId = `bt-spark-grad-${safeId}`;
 	const gridStepX = innerW / 4;
 	const gridStepY = innerH / 3;
 	const gridLines = [];
@@ -128,12 +144,12 @@ function renderBar(coins, prices, ticker24, sparklineData) {
                   ${vol != null ? `<div class="bt-hover-row"><span class="bt-hover-label">24h Vol</span><span class="bt-hover-value">$${formatVolume(vol)}</span></div>` : ''}
                 </div>
               </div>`;
+						const safeSymbol = escapeHtml(symbol);
 						return `
           <div class="bt-coin">
-          
             <div class="bt-coin-main">
               <div class="bt-coin-info">
-                <span class="bt-symbol">${symbol}</span>
+                <span class="bt-symbol">${safeSymbol}</span>
                 <div class="bt-coin-top">
                   <span class="bt-price">$${formatPrice(prices[symbol])}</span>
                   ${pct != null && pct !== '' ? `<span class="bt-change ${changeClass}">${formatChange(pct)}</span>` : ''}
@@ -150,27 +166,35 @@ function renderBar(coins, prices, ticker24, sparklineData) {
 }
 
 function update() {
-	chrome.storage.local.get(
-		[COINS_KEY, PRICES_KEY, TICKER24_KEY, SPARKLINE_KEY],
-		(data) => {
-			const coins = data[COINS_KEY] || [];
-			const prices = data[PRICES_KEY] || {};
-			const ticker24 = data[TICKER24_KEY] || {};
-			const sparklineData = data[SPARKLINE_KEY] || {};
-			renderBar(coins, prices, ticker24, sparklineData);
-		},
-	);
+  chrome.storage.local.get(
+    [COINS_KEY, PRICES_KEY, TICKER24_KEY, SPARKLINE_KEY],
+    (data) => {
+      const raw = data[COINS_KEY];
+      const coins = Array.isArray(raw)
+        ? raw.filter((c) => typeof c === 'string' && VALID_SYMBOL.test(c))
+        : [];
+      const prices = data[PRICES_KEY] && typeof data[PRICES_KEY] === 'object' ? data[PRICES_KEY] : {};
+      const ticker24 = data[TICKER24_KEY] && typeof data[TICKER24_KEY] === 'object' ? data[TICKER24_KEY] : {};
+      const sparklineData = data[SPARKLINE_KEY] && typeof data[SPARKLINE_KEY] === 'object' ? data[SPARKLINE_KEY] : {};
+      renderBar(coins, prices, ticker24, sparklineData);
+    }
+  );
 }
 
-createBar();
-update();
+function init() {
+  if (document.body) {
+    createBar();
+    update();
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      createBar();
+      update();
+    });
+  }
+}
 
+init();
 chrome.storage.onChanged.addListener((changes, areaName) => {
-	if (areaName !== 'local') return;
-	if (
-		[COINS_KEY, PRICES_KEY, TICKER24_KEY, SPARKLINE_KEY].some(
-			(k) => k in changes,
-		)
-	)
-		update();
+  if (areaName !== 'local') return;
+  if ([COINS_KEY, PRICES_KEY, TICKER24_KEY, SPARKLINE_KEY].some((k) => k in changes)) update();
 });

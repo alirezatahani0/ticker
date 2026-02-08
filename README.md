@@ -32,3 +32,10 @@ When you publish to the Chrome Web Store, use these so **Ticker** shows up in se
 - **Tags** (if the store asks): `crypto`, `cryptocurrency`, `Bitcoin`, `Ethereum`, `prices`, `ticker`, `tracker`, `live prices`, `real-time`.
 
 No API key required; uses public market data.
+
+## Production
+
+- **Validation**: Coin symbols must be 2–10 alphanumeric characters; max 20 coins. Invalid or duplicate entries are rejected with feedback.
+- **Security**: User input is escaped in the popup and content script; API responses are validated before use.
+- **Storage**: Only `chrome.storage.local` is used; data is sanitized on read in the background script.
+- **Errors**: Failed API requests are logged in the service worker console; the bar keeps showing last known data.

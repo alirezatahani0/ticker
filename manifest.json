@@ -6,7 +6,8 @@
   "permissions": ["storage"],
   "host_permissions": ["https://api.binance.com/*"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Ticker – Live crypto prices"
   },
   "background": {
     "service_worker": "background.js"
