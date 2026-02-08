@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  background: #0b0e11;
+  color: #eaecef;
+}
+
+.popup {
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0 0 12px;
+  color: #848e9c;
+  font-size: 12px;
+}
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+#coinInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #2b3139;
+  border-radius: 8px;
+  background: #1e2329;
+  color: #eaecef;
+  font-size: 14px;
+}
+
+#coinInput:focus {
+  outline: none;
+  border-color: #f0b90b;
+}
+
+#addBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #f0b90b;
+  color: #0b0e11;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#addBtn:hover {
+  background: #f5c43a;
+}
+
+#coinList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#coinList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  background: #1e2329;
+  border-radius: 8px;
+}
+
+#coinList li span {
+  font-weight: 500;
+}
+
+#coinList button {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #2b3139;
+  color: #848e9c;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#coinList button:hover {
+  background: #474d57;
+  color: #eaecef;
+}
+
+#coinList:empty::after {
+  content: "No coins yet. Add one above.";
+  display: block;
+  color: #848e9c;
+  font-size: 13px;
+}

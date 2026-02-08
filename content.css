@@ -1,0 +1,198 @@
+#binance-tracker-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2147483647;
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.06) inset;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+#binance-tracker-bar .bt-left {
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+#binance-tracker-bar .bt-title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1a1b23;
+  max-height: 50px;
+  height: 50px;
+  padding: 0 16px 0 18px;
+
+}
+
+#binance-tracker-bar .bt-title-wrap .bt-label {
+  margin-bottom: 2px;
+}
+
+#binance-tracker-bar .bt-label {
+  color: #b0b3bc;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+#binance-tracker-bar .bt-coins {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  flex-direction: row;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+#binance-tracker-bar .bt-coin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-left: 1px solid #2b3139;
+  min-width: 250px;
+  transition: transform 0.2s ease;
+  background: #1a1b23;
+  transition: all 0.35s ease-in-out;
+
+}
+
+#binance-tracker-bar .bt-coin:hover {
+  border-radius: 12px 12px 0 0;
+  transition: all 0.35s ease-in-out;
+}
+
+#binance-tracker-bar .bt-coin-expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s ease-in-out;
+  z-index: 2;
+}
+
+#binance-tracker-bar .bt-coin:hover .bt-coin-expand {
+  max-height: 140px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  transition: all 0.35s ease-in-out;
+
+}
+
+#binance-tracker-bar .bt-coin-expand-inner {
+  min-width: 200px;
+  transition: all 0.35s ease-in-out;
+
+}
+
+#binance-tracker-bar .bt-coin-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 50px;
+}
+
+#binance-tracker-bar .bt-hover-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#binance-tracker-bar .bt-hover-row+.bt-hover-row {
+  margin-top: 6px;
+}
+
+#binance-tracker-bar .bt-hover-label {
+  color: #848e9c;
+  margin-right: 12px;
+}
+
+#binance-tracker-bar .bt-hover-value {
+  color: #eaecef;
+  font-weight: 500;
+}
+
+#binance-tracker-bar .bt-coin-expand .bt-hover-row:first-child {
+  margin-top: 0;
+}
+
+#binance-tracker-bar .bt-coin-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+#binance-tracker-bar .bt-coin-sparkline {
+  width: 80px;
+  height: 28px;
+  flex-shrink: 0;
+  overflow-x: visible;
+  overflow-y: hidden;
+  display: flex;
+}
+
+#binance-tracker-bar .bt-coin-sparkline svg {
+  width: 120%;
+  min-width: 96px;
+  height: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+#binance-tracker-bar .bt-coin-top {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+#binance-tracker-bar .bt-symbol {
+  font-size: 11px;
+  color: #b0b3bc;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+#binance-tracker-bar .bt-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+#binance-tracker-bar .bt-change {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+#binance-tracker-bar .bt-change.positive {
+  color: #52d17f;
+}
+
+#binance-tracker-bar .bt-change.negative {
+  color: #f6465d;
+}
+
+#binance-tracker-bar .bt-change.neutral {
+  color: #b0b3bc;
+}
+
+#binance-tracker-bar.bt-empty {
+  display: none;
+}

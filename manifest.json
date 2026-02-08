@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Ticker",
+  "version": "1.0.0",
+  "description": "Live cryptocurrency prices at the bottom of every tab. Track Bitcoin, Ethereum, Solana and other coins in real time. Add your favorite coins and see prices update every few seconds.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://api.binance.com/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_end"
+    }
+  ]
+}
